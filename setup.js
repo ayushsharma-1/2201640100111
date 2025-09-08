@@ -3,7 +3,7 @@
 const path = require('path');
 const { spawn } = require('child_process');
 
-console.log('Initializing URL Shortener Microservice Project...\n');
+console.log('Setting up URL Shortener Microservice Project...\n');
 
 // Function to run command in directory
 function runCommand(command, args, cwd) {

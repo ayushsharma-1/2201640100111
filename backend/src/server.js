@@ -88,9 +88,9 @@ async function startServer() {
     app.listen(PORT, async () => {
         try {
             await Log('backend', 'info', 'service', `URL Shortener Microservice running on port ${PORT}`);
-            console.log(`URL Shortener Microservice running on http://localhost:${PORT}`);
-            console.log(`Health check available at http://localhost:${PORT}/health`);
+            await Log('backend', 'info', 'service', `Health check available at /health endpoint`);
         } catch (error) {
+            // If logging fails, we can use console as fallback
             console.error('Failed to log server startup:', error.message);
         }
     });

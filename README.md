@@ -1,197 +1,162 @@
-# URL Shortener Project
+# URL Shortener Microservice Project
 
-A complete URL shortener microservice with custom logging middleware, built with Node.js and JavaScript.
+## Project Overview
+This project implements a URL shortener microservice with custom logging middleware as per the assignment requirements. It consists of two main components:
+
+1. **Custom Logging Middleware** - A reusable package for application logging
+2. **URL Shortener Service** - HTTP microservice for shortening and redirecting URLs
 
 ## Project Structure
-
 ```
-.
-├── logging_middleware/          # Reusable logging middleware package
+Affordmen/
+├── logging_middleware/     # Custom logging package
 │   ├── src/
-│   │   ├── constants.js        # Logging constants and validation rules
-│   │   ├── logger.js          # Core logging functionality
-│   │   └── index.js           # Main export file
-│   ├── test.js                # Logging middleware tests
+│   │   ├── constants.js   # Validation rules
+│   │   ├── logger.js      # Core logging logic
+│   │   └── index.js       # Package exports
+│   ├── test.js           # Test file
 │   ├── package.json
-│   ├── .env                   # Access token for logging API
+│   ├── .env             # Access token
 │   └── README.md
 │
-├── backend/                    # URL shortener microservice
+├── backend/              # URL shortener service
 │   ├── src/
-│   │   ├── controllers/       # API controllers
-│   │   ├── handlers/          # Business logic handlers
-│   │   ├── middleware/        # Express middleware
-│   │   ├── routes/           # API routes
-│   │   ├── server.js         # Main application
-│   │   ├── storage.js        # Data storage layer
-│   │   └── utils.js          # Utility functions
+│   │   ├── controllers/ # API controllers
+│   │   ├── handlers/    # Business logic
+│   │   ├── middleware/  # Express middleware
+│   │   ├── routes/      # API routes
+│   │   ├── server.js    # Main server file
+│   │   ├── storage.js   # Data storage
+│   │   └── utils.js     # Utilities
 │   ├── tests/
-│   │   └── api.test.js       # API tests
+│   │   └── api.test.js  # API tests
 │   ├── package.json
-│   ├── .env                  # Environment configuration
+│   ├── .env            # Configuration
 │   └── README.md
 │
-├── setup.js                   # Project setup script
-└── README.md                 # This file
+└── setup.js            # Setup script
 ```
 
-## Features
+## Requirements Compliance
 
-### Logging Middleware
-- Reusable logging package for backend applications
-- Integration with external logging API (http://20.244.56.144/evaluation-service/logs)
-- Support for all required log levels (debug, info, warn, error, fatal)
-- Support for all backend packages (cache, controller, db, handler, etc.)
-- Parameter validation and error handling
-- Bearer token authentication
-- Both synchronous and asynchronous logging options
+### Logging Middleware Requirements
+- Custom logging middleware with `Log(stack, level, package, message)` function
+- No use of console.log or built-in loggers in main application
+- Integration with external API: `http://20.244.56.144/evaluation-service/logs`
+- Support for all required levels: debug, info, warn, error, fatal
+- Support for all backend packages: cache, controller, db, handler, middleware, route, service, utils
+- Proper parameter validation and error handling
 
-### URL Shortener Microservice
-- Create shortened URLs with optional custom shortcodes
-- Configurable expiry time (default: 30 minutes)
-- URL redirection with analytics tracking
-- Comprehensive statistics and click analytics
-- Robust error handling with proper HTTP status codes
-- Extensive logging using the custom middleware
-- CORS support and health monitoring
-- In-memory storage (easily replaceable with database)
+### URL Shortener Requirements
+- RESTful HTTP microservice
+- Create short URLs with POST `/shorturls`
+- Get statistics with GET `/shorturls/{shortcode}`
+- Redirect with GET `/{shortcode}`
+- Health check endpoint
+- Optional custom shortcode support
+- 30-minute default validity period
+- Comprehensive analytics tracking
+- Proper HTTP status codes and error responses
 
-## Quick Start
+## Setup Instructions
 
-1. **Run the setup script:**
+1. **Install Dependencies**
+   ```bash
+   # Install logging middleware dependencies
+   cd logging_middleware
+   npm install
+   
+   # Install backend service dependencies
+   cd ../backend
+   npm install
+   ```
+
+2. **Configure Environment**
+   - Update `ACCESS_TOKEN` in both `.env` files with your JWT token
+   - Default PORT is 3000 (configurable in backend/.env)
+
+3. **Run the Application**
+   ```bash
+   # Test logging middleware first
+   cd logging_middleware
+   node test.js
+   
+   # Start the URL shortener service
+   cd ../backend
+   npm start
+   ```
+
+## API Usage
+
+### Create Short URL
 ```bash
-node setup.js
-```
+POST http://localhost:3000/shorturls
+Content-Type: application/json
 
-2. **Test the logging middleware:**
-```bash
-cd logging_middleware
-node test.js
-```
-
-3. **Start the URL shortener service:**
-```bash
-cd backend
-npm start
-```
-
-## API Usage Examples
-
-### Create a Short URL
-```bash
-curl -X POST http://localhost:3000/shorturls \
-  -H "Content-Type: application/json" \
-  -d '{
-    "url": "https://www.example.com/very-long-url",
-    "validity": 60,
-    "shortcode": "custom123"
-  }'
-```
-
-**Response:**
-```json
 {
-  "shortLink": "http://localhost:3000/custom123",
-  "expiry": "2025-09-08T01:00:00.000Z"
+  "url": "https://www.example.com/long-url",
+  "validity": 30,
+  "shortcode": "custom123"
 }
 ```
 
 ### Get URL Statistics
 ```bash
-curl http://localhost:3000/shorturls/custom123
+GET http://localhost:3000/shorturls/custom123
 ```
 
 ### Access Short URL (Redirect)
 ```bash
-curl -L http://localhost:3000/custom123
+GET http://localhost:3000/custom123
 ```
 
 ### Health Check
 ```bash
-curl http://localhost:3000/health
+GET http://localhost:3000/health
 ```
 
-## Logging Examples
+## Key Features
 
-```javascript
-const { Log } = require('../../logging_middleware/src/index');
+- **Custom Logging**: All operations logged using custom middleware
+- **URL Shortening**: Generate short codes for long URLs
+- **Custom Shortcodes**: Support for user-defined shortcodes
+- **Analytics**: Track clicks, referrers, and user agents
+- **Expiry Management**: Configurable URL validity periods
+- **Error Handling**: Comprehensive error responses
+- **Health Monitoring**: Service health check endpoint
 
-// Log successful operations
-await Log('backend', 'info', 'service', 'User authentication successful');
-
-// Log errors
-await Log('backend', 'error', 'handler', 'Received string, expected bool');
-
-// Log critical issues
-await Log('backend', 'fatal', 'db', 'Critical database connection failure');
-```
-
-## Configuration
-
-Both services use environment variables for configuration:
-
-**logging_middleware/.env:**
-```env
-ACCESS_TOKEN=your_jwt_token_here
-```
-
-**backend/.env:**
-```env
-ACCESS_TOKEN=your_jwt_token_here
-PORT=3000
-NODE_ENV=development
-```
+## Technology Stack
+- **Language**: JavaScript (Node.js)
+- **Framework**: Express.js
+- **HTTP Client**: Axios (for logging API calls)
+- **Storage**: In-memory (Map objects)
+- **Testing**: Jest + Supertest
 
 ## Testing
 
-**Test the logging middleware:**
 ```bash
+# Test logging middleware
 cd logging_middleware && node test.js
-```
 
-**Test the backend service:**
-```bash
+# Test backend service
 cd backend && npm test
 ```
 
-## Architecture Highlights
+## Implementation Highlights
 
-- **Modular Design**: Separate logging middleware and URL shortener service
-- **Comprehensive Logging**: Every significant operation is logged with appropriate context
-- **Error Handling**: Robust error handling with descriptive messages
-- **Validation**: Input validation for all API endpoints
-- **Analytics**: Click tracking with referrer, user agent, and IP information
-- **Scalability**: Easy to replace in-memory storage with databases
-- **Standards Compliance**: RESTful API design with proper HTTP status codes
+1. **No External Libraries**: Used only required dependencies (express, axios, etc.)
+2. **Modular Design**: Separate logging and URL shortener components
+3. **Comprehensive Logging**: Every operation logged with appropriate context
+4. **Error Handling**: Proper HTTP status codes and descriptive error messages
+5. **Validation**: Input validation for all endpoints
+6. **Analytics**: Detailed tracking of URL usage patterns
 
-## Production Considerations
+## Project Completion Status
 
-1. **Database Integration**: Replace in-memory storage with Redis/PostgreSQL
-2. **Rate Limiting**: Implement rate limiting to prevent abuse
-3. **Caching**: Add Redis for frequently accessed URLs
-4. **Security**: Input sanitization and validation
-5. **Monitoring**: Comprehensive logging and alerting
-6. **Load Balancing**: High availability setup
-7. **Geolocation**: Integration with proper geolocation services
-
-## Technology Stack
-
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Language**: JavaScript (ES6+)
-- **HTTP Client**: Axios
-- **Testing**: Jest + Supertest
-- **Storage**: In-memory (production: Redis/PostgreSQL)
-
-## Compliance
-
-This implementation follows all specified requirements:
-- Mandatory use of custom logging middleware (no console.log or built-in loggers)
-- Single microservice architecture
-- No authentication required for API access
-- Globally unique shortcodes
-- 30-minute default validity
-- Custom shortcode support
-- Proper HTTP redirects
-- Comprehensive error handling
-- Detailed analytics tracking
+- Custom logging middleware implemented  
+- URL shortener microservice completed  
+- All API endpoints functional  
+- Comprehensive error handling  
+- Analytics and statistics tracking  
+- Health monitoring implemented  
+- Documentation and examples provided

@@ -1,10 +1,10 @@
 {
   "name": "universal-logging-middleware",
   "version": "1.0.0",
-  "description": "A reusable logging middleware for capturing application lifecycle events",
+  "description": "Custom logging middleware for URL shortener project",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "node test.js",
     "start": "node src/index.js"
   },
   "keywords": [
