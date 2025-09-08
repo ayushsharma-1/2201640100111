@@ -1,4 +1,4 @@
-# Universal Logging Middleware
+# Logging Middleware
 
 A reusable logging middleware for Node.js backend applications that integrates with external logging services.
 
@@ -23,32 +23,6 @@ Create a `.env` file with your access token:
 
 ```env
 ACCESS_TOKEN=your_access_token_here
-```
-
-## Usage
-
-### Basic Usage
-
-```javascript
-const { Log } = require('universal-logging-middleware');
-
-// Log an error
-await Log('backend', 'error', 'handler', 'Received string, expected bool');
-
-// Log database issues
-await Log('backend', 'fatal', 'db', 'Critical database connection failure');
-
-// Log successful operations
-await Log('backend', 'info', 'service', 'User authentication successful');
-```
-
-### Async Logging (Fire and Forget)
-
-```javascript
-const { LogAsync } = require('universal-logging-middleware');
-
-// This won't wait for the API response
-LogAsync('backend', 'debug', 'middleware', 'Request processed');
 ```
 
 ## Parameters
@@ -79,17 +53,6 @@ LogAsync('backend', 'debug', 'middleware', 'Request processed');
 npm test
 # or
 node test.js
-```
-
-## API Response
-
-Successful logs return:
-
-```json
-{
-  "logID": "a4ad02e-19d8-4153-86d9-58bf55d7c402",
-  "message": "Log created successfully"
-}
 ```
 
 ## Error Handling
