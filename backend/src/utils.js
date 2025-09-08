@@ -1,5 +1,5 @@
 const crypto = require('crypto');
-const { Log } = require('universal-logging-middleware');
+const { Log } = require('../../logging_middleware/src/index');
 
 /**
  * Generates a unique shortcode

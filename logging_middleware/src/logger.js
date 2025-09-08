@@ -1,5 +1,5 @@
 const axios = require('axios');
-require('dotenv').config();
+// Don't load dotenv here - let the parent application handle environment loading
 const { STACK_VALUES, LEVEL_VALUES, BACKEND_PACKAGES } = require('./constants');
 
 /**
@@ -56,11 +56,14 @@ async function sendLogToService(stack, level, packageName, message) {
         throw new Error('ACCESS_TOKEN environment variable is required');
     }
     
+    // Truncate message to 48 characters to comply with API requirements
+    const truncatedMessage = message.length > 48 ? message.substring(0, 45) + '...' : message;
+    
     const logPayload = {
         stack: stack.toLowerCase(),
         level: level.toLowerCase(),
         package: packageName.toLowerCase(),
-        message: message
+        message: truncatedMessage
     };
     
     try {

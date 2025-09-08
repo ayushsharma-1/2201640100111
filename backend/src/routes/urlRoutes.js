@@ -15,16 +15,7 @@ router.use(async (req, res, next) => {
     next();
 });
 
-// POST /shorturls - Create a new short URL
-router.post('/shorturls', createShortUrl);
-
-// GET /shorturls/:shortcode - Get statistics for a short URL
-router.get('/shorturls/:shortcode', getShortUrlStats);
-
-// GET /:shortcode - Redirect to original URL
-router.get('/:shortcode', redirectShortUrl);
-
-// Health check endpoint
+// Health check endpoint (must be before catch-all route)
 router.get('/health', async (req, res) => {
     try {
         await Log('backend', 'info', 'route', 'Health check requested');
@@ -41,5 +32,14 @@ router.get('/health', async (req, res) => {
         });
     }
 });
+
+// POST /shorturls - Create a new short URL
+router.post('/shorturls', createShortUrl);
+
+// GET /shorturls/:shortcode - Get statistics for a short URL
+router.get('/shorturls/:shortcode', getShortUrlStats);
+
+// GET /:shortcode - Redirect to original URL (must be last among GET routes)
+router.get('/:shortcode', redirectShortUrl);
 
 module.exports = router;
