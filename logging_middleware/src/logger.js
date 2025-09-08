@@ -109,25 +109,8 @@ async function Log(stack, level, packageName, message) {
     }
 }
 
-/**
- * Synchronous version of Log function that doesn't wait for the API response
- * Useful for fire-and-forget logging scenarios
- * @param {string} stack - The application stack (backend)
- * @param {string} level - The log level (debug/info/warn/error/fatal)
- * @param {string} packageName - The package name
- * @param {string} message - The log message
- */
-function LogAsync(stack, level, packageName, message) {
-    Log(stack, level, packageName, message).catch(error => {
-        // Silent failure for async logging
-        // In a real application, you might want to store failed logs locally
-        // or implement a retry mechanism
-    });
-}
-
 module.exports = {
     Log,
-    LogAsync,
     validateLogParameters,
     sendLogToService
 };

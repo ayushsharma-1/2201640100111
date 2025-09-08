@@ -1,4 +1,4 @@
-const { Log, LogAsync } = require('./src/index');
+const { Log } = require('./src/index');
 
 // Test the logging middleware
 async function testLogger() {
